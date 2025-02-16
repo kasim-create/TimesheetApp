@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "Timesheets";
+}
+
+@model List<TimesheetViewModel>
+@{
+    <h1>Timesheets</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-2">Id</div>
+        <div class="col-md-2">Name</div>
+        <div class="col-md-2">Date</div>
+        <div class="col-md-2">Project</div>
+        <div class="col-md-2">Description of Tasks</div>
+        <div class="col-md-2">Hours Worked</div>
+    </div>
+    <hr />
+
+    @foreach(var timesheet in Model)
+    {
+        <div class="row">
+            <div class="col-md-2">@timesheet.Id</div>
+            <div class="col-md-2">@timesheet.Name</div>
+            <div class="col-md-2">@timesheet.Date.ToShortDateString()</div>
+            <div class="col-md-2">@timesheet.Project</div>
+            <div class="col-md-2">@timesheet.DescriptionOfTasks</div>
+            <div class="col-md-2">@timesheet.HoursWorked</div>
+            <hr />
+        </div>
+        
+    }
+}
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
