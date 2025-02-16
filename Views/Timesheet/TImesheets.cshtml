@@ -31,11 +31,30 @@
         </div>
         
     }
+    if (Model.Count > 0)
+    {
+        <button id="downloadCsv" class="btn btn-primary">Download CSV</button>
+    }
+    
 }
 
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script>
+        document.getElementById('downloadCsv').addEventListener('click', function () {
+            var timesheets = @Html.Raw(Json.Serialize(Model));
+            var csv = 'Id,Name,Date,Project,DescriptionOfTasks,HoursWorked\n';
+
+            timesheets.forEach(function (timesheet) {
+                csv += `${timesheet.id},${timesheet.name},${new Date(timesheet.date).toLocaleDateString()},${timesheet.project},${timesheet.descriptionOfTasks},${timesheet.hoursWorked}\n`;
+            });
+
+            var blob = new Blob([csv], { type: 'text/csv' });
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Timesheets.csv');
+            a.click();
+        });
+    </script>
     }
-}
