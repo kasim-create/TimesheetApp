@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+.col-md-2 {
+    flex: 0 0 auto;
+    width: 13.66666667% !important;
+}

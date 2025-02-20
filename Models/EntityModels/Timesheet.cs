@@ -13,5 +13,7 @@ namespace TimesheetApp.Models.EntityModels
         public string DescriptionOfTasks { get; set; }
 
         public int HoursWorked { get; set; }
+
+        public int TotalHoursWorked {  get; set; }
     }
 }

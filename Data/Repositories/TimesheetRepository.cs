@@ -18,5 +18,12 @@ namespace TimesheetApp.Data.Repositories
             _context.Timesheets.Add(timesheet);
             _context.SaveChanges();
         }
+
+        public void UpdateTimesheets(List<Timesheet> timesheets)
+        {
+            _context.Timesheets.UpdateRange(timesheets);
+            _context.SaveChanges(); 
+        }
+
     }
 }

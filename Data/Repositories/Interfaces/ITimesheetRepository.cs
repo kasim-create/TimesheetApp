@@ -9,5 +9,8 @@ namespace TimesheetApp.Data.Repositories.Interfaces
 
         public void CreateTimesheet(Timesheet timesheet);
 
+        public void UpdateTimesheets(List<Timesheet> timesheets);
+
+
     }
 }

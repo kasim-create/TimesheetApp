@@ -24,5 +24,7 @@ namespace TimesheetApp.Models
         [Range(0, 24)]
         public int HoursWorked { get; set; }
 
+        public int TotalHoursWorked { get; set; }
+
     }
 }
