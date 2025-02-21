@@ -3,6 +3,7 @@ using TimesheetApp.Data;
 using TimesheetApp.Data.Repositories.Interfaces;
 using TimesheetApp.Data.Repositories;
 using TimesheetApp.BusinessLogic;
+using TimesheetApp.BusinessLogic.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<ITimesheetRepository, TimesheetRepository>();
 builder.Services.AddScoped<TimesheetManager>();
+builder.Services.AddScoped<ICsvGenerator, CsvGenerator>();
 
 var app = builder.Build();
 

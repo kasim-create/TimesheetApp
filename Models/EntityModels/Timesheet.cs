@@ -14,6 +14,6 @@ namespace TimesheetApp.Models.EntityModels
 
         public int HoursWorked { get; set; }
 
-        public int TotalHoursWorked {  get; set; }
+        public int? TotalHoursWorked {  get; set; }
     }
 }

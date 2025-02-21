@@ -15,6 +15,7 @@
         <div class="col-md-2">Project</div>
         <div class="col-md-2">Description of Tasks</div>
         <div class="col-md-2">Hours Worked</div>
+        <div class="col-md-2">Total Hours Worked</div>
     </div>
     <hr />
 
@@ -27,6 +28,7 @@
             <div class="col-md-2">@timesheet.Project</div>
             <div class="col-md-2">@timesheet.DescriptionOfTasks</div>
             <div class="col-md-2">@timesheet.HoursWorked</div>
+            <div class="col-md-2">@timesheet.TotalHoursWorked</div>
             <hr />
         </div>
         
@@ -42,19 +44,29 @@
 @section Scripts {
     <script>
         document.getElementById('downloadCsv').addEventListener('click', function () {
-            var timesheets = @Html.Raw(Json.Serialize(Model));
-            var csv = 'Id,Name,Date,Project,DescriptionOfTasks,HoursWorked\n';
-
-            timesheets.forEach(function (timesheet) {
-                csv += `${timesheet.id},${timesheet.name},${new Date(timesheet.date).toLocaleDateString()},${timesheet.project},${timesheet.descriptionOfTasks},${timesheet.hoursWorked}\n`;
+            fetch('/DownloadAllTimeSheetsCsv', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                } else {
+                    throw new Error('Failed to download CSV');
+                }
+            })
+            .then(blob => {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'Timesheets.csv');
+                a.click();
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-
-            var blob = new Blob([csv], { type: 'text/csv' });
-            var url = window.URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', 'Timesheets.csv');
-            a.click();
         });
     </script>
     }

@@ -20,18 +20,21 @@ namespace TimesheetApp.BusinessLogic
 
             var timesheets = _timesheetRepository.GetTimesheets();
 
-            var matchedTimesheets = timesheets.Where(x => x.Name == timesheet.Name &&  x.Date == timesheet.Date).ToList();
+            var matchedTimesheets = timesheets?.Where(x => x.Name == timesheet.Name &&  x.Date == timesheet.Date).ToList();
 
-            if (matchedTimesheets.Any() && matchedTimesheets.Count > 1)
+            if (matchedTimesheets != null)
             {
-                var sum = matchedTimesheets.Sum(m => m.HoursWorked);
-
-                foreach(var matchedTimesheet in matchedTimesheets)
+                if (matchedTimesheets.Any() && matchedTimesheets.Count > 1)
                 {
-                    matchedTimesheet.TotalHoursWorked = 0;
-                    matchedTimesheet.TotalHoursWorked += sum;
+                    var sum = matchedTimesheets.Sum(m => m.HoursWorked);
+
+                    foreach (var matchedTimesheet in matchedTimesheets)
+                    {
+                        matchedTimesheet.TotalHoursWorked = 0;
+                        matchedTimesheet.TotalHoursWorked += sum;
+                    }
+                    _timesheetRepository.UpdateTimesheets(matchedTimesheets);
                 }
-                _timesheetRepository.UpdateTimesheets(matchedTimesheets);
             }
         } 
 

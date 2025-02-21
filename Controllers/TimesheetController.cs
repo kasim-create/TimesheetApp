@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using TimesheetApp.BusinessLogic;
+using TimesheetApp.BusinessLogic.Interfaces;
 using TimesheetApp.Data;
 using TimesheetApp.Models;
 using TimesheetApp.Models.EntityModels;
@@ -10,10 +12,12 @@ namespace TimesheetApp.Controllers
     public class TimesheetController : Controller
     {
         private readonly TimesheetManager _timesheetManager;
+        private readonly ICsvGenerator _csvGenerator;
 
-       public TimesheetController(TimesheetManager timesheetManager)
+        public TimesheetController(TimesheetManager timesheetManager, ICsvGenerator csvGenerator)
         {
             _timesheetManager = timesheetManager;
+            _csvGenerator = csvGenerator;
         }
 
         [HttpGet("Timesheets")]
@@ -27,7 +31,8 @@ namespace TimesheetApp.Controllers
                     Date = t.Date,
                     Project = t.Project,
                     DescriptionOfTasks = t.DescriptionOfTasks,
-                    HoursWorked = t.HoursWorked
+                    HoursWorked = t.HoursWorked,
+                    TotalHoursWorked = t.TotalHoursWorked,
                 })
                 .ToList();
 
@@ -35,7 +40,7 @@ namespace TimesheetApp.Controllers
             {
                 return View(timesheets);
             }
-            
+
             return View();
         }
 
@@ -56,13 +61,26 @@ namespace TimesheetApp.Controllers
                     Date = model.Date,
                     Project = model.Project,
                     DescriptionOfTasks = model.DescriptionOfTasks,
-                    HoursWorked = model.HoursWorked
+                    HoursWorked = model.HoursWorked,
+                    TotalHoursWorked = model.HoursWorked
                 };
 
                 _timesheetManager.CreateTimesheet(timesheet);
                 return RedirectToAction("Timesheets");
             }
             return View(model);
+        }
+
+        [HttpGet("DownloadAllTimesheetsCsv")]
+        public IActionResult DownloadAllTimesheetsCsv()
+        {
+            var timesheets = _timesheetManager.GetTimesheets();
+            var csvContent = _csvGenerator.GenerateCsv(timesheets);
+            var csvBytes = Encoding.UTF8.GetBytes(csvContent);
+            var output = new MemoryStream(csvBytes);
+            var fileName = $"Timesheets_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+            return File(output, "text/csv", fileName);
         }
     }
 }
